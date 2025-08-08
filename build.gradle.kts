@@ -30,7 +30,7 @@ gradlePlugin {
 
             displayName = "Gradle Repository Manager"
             description = "A powerful Gradle plugin that simplifies Maven repository management for your Gradle projects"
-            tags.set(listOf("manager", "settings","plugin"))
+            tags.set(listOf("manager", "settings"))
         }
     }
 }
