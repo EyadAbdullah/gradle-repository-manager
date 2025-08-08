@@ -1,0 +1,9 @@
+.settings
+.gradle
+.project
+.classpath
+.idea
+
+build
+bin
+upload
