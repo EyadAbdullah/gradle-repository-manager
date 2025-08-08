@@ -6,7 +6,9 @@ on:
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
