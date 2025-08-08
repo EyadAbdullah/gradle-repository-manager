@@ -1,9 +1,11 @@
-[![GitHub](https://img.shields.io/github/license/EyadAbdullah/gradle-repository-manager)](https://github.com/EyadAbdullah/gradle-repository-manager/blob/main/LICENSE)
 # GradleRepositoryManager
 
 This Gradle Repository Manager plugin allows you to configure public and private repositories for
 your project dependencies and plugin dependencies, and also supports Java root projects and submodules.
 
+[![GitHub](https://img.shields.io/github/license/EyadAbdullah/gradle-repository-manager)](https://github.com/EyadAbdullah/gradle-repository-manager/blob/main/LICENSE)
+[![Publish Plugin](https://github.com/EyadAbdullah/gradle-repository-manager/actions/workflows/publish-plugin.yml/badge.svg)](https://github.com/EyadAbdullah/gradle-repository-manager/actions/workflows/publish-plugin.yml)
+[![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/io.github.eyadabdullah.gradle-repository-manager.svg)](https://plugins.gradle.org/plugin/io.github.eyadabdullah.gradle-repository-manager)
 
 ## Usage
 
