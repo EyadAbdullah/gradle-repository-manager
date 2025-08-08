@@ -1,12 +1,12 @@
 plugins {
     `kotlin-dsl`
     id("java-gradle-plugin")
-    id("maven-publish")
+    id("com.gradle.plugin-publish") version "1.3.1"
     kotlin("jvm") version "2.0.20"
 }
 
 group = "io.github.eyadabdullah"
-version = "1.0.2"
+version = "1.0.0"
 
 dependencies {
     implementation(gradleApi())
@@ -23,6 +23,7 @@ dependencies {
 gradlePlugin {
     plugins {
         create("gradle-repository-manager") {
+            displayName = "Gradle Repository Manager"
             id = "io.github.eyadabdullah.gradle-repository-manager"
             implementationClass = "io.github.eyadabdullah.gradlerepositorymanager.RepositoryManagerPlugin"
         }
