@@ -25,9 +25,12 @@ gradlePlugin {
     vcsUrl.set("https://github.com/EyadAbdullah/gradle-repository-manager")
     plugins {
         create("gradle-repository-manager") {
-            displayName = "Gradle Repository Manager"
             id = "io.github.eyadabdullah.gradle-repository-manager"
             implementationClass = "io.github.eyadabdullah.gradlerepositorymanager.RepositoryManagerPlugin"
+
+            displayName = "Gradle Repository Manager"
+            description = "A powerful Gradle plugin that simplifies Maven repository management for your Gradle projects"
+            tags.set(listOf("manager", "settings","plugin"))
         }
     }
 }
