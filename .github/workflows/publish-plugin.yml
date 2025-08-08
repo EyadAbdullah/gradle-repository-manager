@@ -27,6 +27,9 @@ jobs:
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts', '**/gradle-wrapper.properties') }}
 
+      - name: Ensure gradlew is executable
+        run: chmod +x gradlew
+
       - name: Run unit tests
         run: ./gradlew clean test --no-daemon
 
