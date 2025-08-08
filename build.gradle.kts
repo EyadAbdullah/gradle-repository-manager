@@ -21,6 +21,8 @@ dependencies {
 }
 
 gradlePlugin {
+    website.set("https://github.com/EyadAbdullah/gradle-repository-manager")
+    vcsUrl.set("https://github.com/EyadAbdullah/gradle-repository-manager")
     plugins {
         create("gradle-repository-manager") {
             displayName = "Gradle Repository Manager"
