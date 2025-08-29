@@ -71,23 +71,23 @@ This can be found in:
 
 Here is a recommended sample configuration:
 ```properties
-systemProp.repository_manager.repo.0.url=https://source.example.com/api/v4/groups/1/-/packages/maven
-systemProp.repository_manager.repo.0.token_name=Private-Token
-systemProp.repository_manager.repo.0.token_value=YOUR PERSONAL GITLAB TOKEN HERE
+systemProp.repository_manager_repo_0_url=https://source.example.com/api/v4/groups/1/-/packages/maven
+systemProp.repository_manager_repo_0_token_name=Private-Token
+systemProp.repository_manager_repo_0_token_value=YOUR PERSONAL GITLAB TOKEN HERE
 
-systemProp.repository_manager.repo.1.url=https://source.example.com/api/v4/groups/2/-/packages/maven
-systemProp.repository_manager.repo.1.token_name=Private-Token
-systemProp.repository_manager.repo.1.token_value=YOUR PERSONAL GITLAB TOKEN HERE
+systemProp.repository_manager_repo_1_url=https://source.example.com/api/v4/groups/2/-/packages/maven
+systemProp.repository_manager_repo_1_token_name=Private-Token
+systemProp.repository_manager_repo_1_token_value=YOUR PERSONAL GITLAB TOKEN HERE
 
 # gradle-plugins-local on Artifactory
-systemProp.repository_manager.repo.3.url=http://localhost:8081/artifactory/release-local
-systemProp.repository_manager.repo.3.username=USERNAME
-systemProp.repository_manager.repo.3.password=PASSWORD
+systemProp.repository_manager_repo_3_url=http://localhost:8081/artifactory/release-local
+systemProp.repository_manager_repo_3_username=USERNAME
+systemProp.repository_manager_repo_3_password=PASSWORD
 
 # libs-release-local on Artifactory
-systemProp.repository_manager.repo.4.url=http://localhost:8081/artifactory/snapshot-local
-systemProp.repository_manager.repo.4.username=USERNAME
-systemProp.repository_manager.repo.4.password=PASSWORD
+systemProp.repository_manager_repo_4_url=http://localhost:8081/artifactory/snapshot-local
+systemProp.repository_manager_repo_4_username=USERNAME
+systemProp.repository_manager_repo_4_password=PASSWORD
 ```
 
 ## How to test the plugin locally
