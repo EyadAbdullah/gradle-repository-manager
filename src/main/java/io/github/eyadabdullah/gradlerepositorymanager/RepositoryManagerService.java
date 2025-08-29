@@ -90,7 +90,7 @@ public class RepositoryManagerService {
       }
 
       var repositoryCredentialList = repositoryCredentials.stream()
-          .filter(it -> it.getUrl().equals(repository.getUrl()))
+          .filter(it -> it.doesUrlMatch(repository.getUrl()))
           .toList();
 
       if (repositoryCredentialList.size() > 1) {

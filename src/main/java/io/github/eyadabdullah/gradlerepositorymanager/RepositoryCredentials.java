@@ -60,6 +60,10 @@ public class RepositoryCredentials {
     return url;
   }
 
+  public Boolean doesUrlMatch(String url) {
+    return Pattern.compile(this.url).matcher(url).matches();
+  }
+
   public String getTokenName() {
     return tokenName;
   }

@@ -49,7 +49,8 @@ public class RepositoryManagerPlugin implements Plugin<Settings> {
       evaluatedSettings.getGradle().allprojects(project -> {
         var projectRepoHandler = project.getRepositories();
         // add dependency specific repos
-        logger.quiet("\n> RepositoryManager - configure {}", project.getName());
+        logger.debug(""); // Add empty line so that we get nicer output
+        logger.quiet("> RepositoryManager - configure {}", project.getName());
         repositoryManagerService.addRepositories(projectRepoHandler, repositoriesList);
         repositoryManagerService.addMavenLocalRepoIfEnabled(repositoryExtension, projectRepoHandler);
         repositoryManagerService.addMavenCentralRepoIfEnabled(repositoryExtension, projectRepoHandler);
