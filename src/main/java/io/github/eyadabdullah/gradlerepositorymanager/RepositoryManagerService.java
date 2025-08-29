@@ -48,17 +48,17 @@ public class RepositoryManagerService {
   public void findRepositoryCredentialsFromGradleProperties(ProviderFactory provider) {
     var repositoriesToConfigure = new HashMap<String, RepositoryCredentials>();
     var repositorySystemProperties = provider.systemPropertiesPrefixedBy(REPOSITORY_DEFINITION_PREFIX).get();
-      collectCredentialsInto(repositorySystemProperties, repositoriesToConfigure);
+      collectCredentialsInto(repositoriesToConfigure, repositorySystemProperties);
 
       var repositoryEnvProperties = provider.environmentVariablesPrefixedBy(REPOSITORY_DEFINITION_PREFIX).get();
-      collectCredentialsInto(repositoryEnvProperties, repositoriesToConfigure);
+      collectCredentialsInto(repositoriesToConfigure, repositoryEnvProperties);
 
       repositoriesToConfigure.values().forEach(repo ->
         logger.quiet("- found credential: {}", repo.toString()));
     repositoryCredentials = repositoriesToConfigure.values().stream().toList();
   }
 
-    private static void collectCredentialsInto(Map<String, String> repositoryProperties, HashMap<String, RepositoryCredentials> repositoriesToConfigure) {
+    private static void collectCredentialsInto(HashMap<String, RepositoryCredentials> repositoriesToConfigure, Map<String, String> repositoryProperties) {
         repositoryProperties.forEach((propertyName, propertyValue) -> {
           if (RepositoryCredentials.isValidRepository(propertyName)) {
             var repository = new RepositoryCredentials(propertyName);
