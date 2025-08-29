@@ -6,6 +6,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.dsl.RepositoryHandler;
 import org.gradle.api.artifacts.repositories.MavenRepositoryContentDescriptor;
@@ -45,22 +47,29 @@ public class RepositoryManagerService {
   @SuppressWarnings("UnstableApiUsage")
   public void findRepositoryCredentialsFromGradleProperties(ProviderFactory provider) {
     var repositoriesToConfigure = new HashMap<String, RepositoryCredentials>();
-    var repositoryProperties = provider.systemPropertiesPrefixedBy(REPOSITORY_DEFINITION_PREFIX).get();
-    repositoryProperties.forEach((propertyName, propertyValue) -> {
-      if (RepositoryCredentials.isValidRepository(propertyName)) {
-        var repository = new RepositoryCredentials(propertyName);
-        repository = repositoriesToConfigure.getOrDefault(repository.getIdentifier(), repository);
-        repository.setProperty(propertyName, propertyValue);
-        repositoriesToConfigure.put(repository.getIdentifier(), repository);
-      }
-    });
+    var repositorySystemProperties = provider.systemPropertiesPrefixedBy(REPOSITORY_DEFINITION_PREFIX).get();
+      collectCredentialsInto(repositoriesToConfigure, repositorySystemProperties);
 
-    repositoriesToConfigure.values().forEach(repo ->
+      var repositoryEnvProperties = provider.environmentVariablesPrefixedBy(REPOSITORY_DEFINITION_PREFIX).get();
+      collectCredentialsInto(repositoriesToConfigure, repositoryEnvProperties);
+
+      repositoriesToConfigure.values().forEach(repo ->
         logger.quiet("- found credential: {}", repo.toString()));
     repositoryCredentials = repositoriesToConfigure.values().stream().toList();
   }
 
-  public void addRepositories(RepositoryHandler repoHandler, List<ManageableRepository> repositories) {
+    private static void collectCredentialsInto(HashMap<String, RepositoryCredentials> repositoriesToConfigure, Map<String, String> repositoryProperties) {
+        repositoryProperties.forEach((propertyName, propertyValue) -> {
+          if (RepositoryCredentials.isValidRepository(propertyName)) {
+            var repository = new RepositoryCredentials(propertyName);
+            repository = repositoriesToConfigure.getOrDefault(repository.getIdentifier(), repository);
+            repository.setProperty(propertyName, propertyValue);
+            repositoriesToConfigure.put(repository.getIdentifier(), repository);
+          }
+        });
+    }
+
+    public void addRepositories(RepositoryHandler repoHandler, List<ManageableRepository> repositories) {
     repositories.forEach(repo -> addRepository(repoHandler, repo));
   }
 

@@ -1,9 +1,12 @@
 package io.github.eyadabdullah.gradlerepositorymanager;
 
 import java.io.IOException;
+import java.util.Map;
+
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.jupiter.api.Test;
 
+import static java.util.Map.entry;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -64,6 +67,45 @@ class RepositoryManagerServiceTest extends RepositoryManagerBaseTest {
     // act & assert
     var result = loadAndAssertLoadingProject();
     assertTrue(result.getOutput().contains("found repository: repository\t- https://gitlab.example.com/api/v4/groups/680/-/packages/maven"));
+  }
+
+  @Test
+  void testAddingRepoWithNameAndCredentials() throws IOException {
+    // arrange
+    System.setProperty("repository_manager_repo_my_name123_username", "foo");
+    System.setProperty("repository_manager_repo_my_name123_url", "https://gitlab.example.com/api/v4/groups/680/-/packages/maven");
+    configurePluginInSettings("""
+      RepositoryManager {
+        repository("repository", "https://gitlab.example.com/api/v4/groups/680/-/packages/maven")
+      }
+    """);
+    addPublicDependencies();
+    // act & assert
+    var result = loadAndAssertLoadingProject();
+    assertTrue(result.getOutput().contains("found repository: repository\t- https://gitlab.example.com/api/v4/groups/680/-/packages/maven"));
+    assertTrue(result.getOutput().contains("- found credential: RepositoryCredentials{identifier='my_name123', url='https://gitlab.example.com/api/v4/groups/680/-/packages/maven', tokenName='null', username='foo'}"));
+  }
+
+  @Test
+  void testAddingRepoWithNameAndCredentialsFromEnv() throws IOException {
+      // arrange
+      var env = Map.ofEntries(
+          entry("repository_manager_repo_my_name123_username", "foo"),
+          entry("repository_manager_repo_my_name123_url", "https://gitlab.example.com/api/v4/groups/680/-/packages/maven"),
+          entry("unrelated_entry", "x")
+      );
+
+      configurePluginInSettings("""
+            RepositoryManager {
+              repository("repository", "https://gitlab.example.com/api/v4/groups/680/-/packages/maven")
+            }
+          """);
+      addPublicDependencies();
+      // act & assert
+      var result = loadAndAssertLoadingProject(env);
+      assertTrue(result.getOutput().contains("found repository: repository\t- https://gitlab.example.com/api/v4/groups/680/-/packages/maven"));
+      assertTrue(result.getOutput()
+          .contains("- found credential: RepositoryCredentials{identifier='my_name123', url='https://gitlab.example.com/api/v4/groups/680/-/packages/maven', tokenName='null', username='foo'}"));
   }
 
   @Test
