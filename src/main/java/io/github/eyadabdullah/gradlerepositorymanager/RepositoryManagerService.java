@@ -56,7 +56,7 @@ public class RepositoryManagerService {
       repositoriesToConfigure.values().forEach(repo ->
         logger.quiet("- found credential: {}", repo.toString()));
       if(repositoriesToConfigure.isEmpty()) {
-        logger.warn("- no credentials configured!");
+        logger.warn("- no credentials configured! Please visit https://github.com/EyadAbdullah/gradle-repository-manager/#configure-repository-credentials if you need help configuring them.");
       }
     repositoryCredentials = repositoriesToConfigure.values().stream().toList();
   }
