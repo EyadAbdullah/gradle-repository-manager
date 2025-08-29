@@ -55,6 +55,9 @@ public class RepositoryManagerService {
 
       repositoriesToConfigure.values().forEach(repo ->
         logger.quiet("- found credential: {}", repo.toString()));
+      if(repositoriesToConfigure.isEmpty()) {
+        logger.warn("- no credentials configured!");
+      }
     repositoryCredentials = repositoriesToConfigure.values().stream().toList();
   }
 
@@ -116,27 +119,27 @@ public class RepositoryManagerService {
         }
       }
     });
-    logger.quiet("- configured repository: " + repository.getName());
+    logger.debug("- configured repository: " + repository.getName());
   }
 
   public void addMavenLocalRepoIfEnabled(RepositoryManagerExtension extension, RepositoryHandler repoHandler) {
     if (extension.isMavenLocal()) {
       repoHandler.mavenLocal();
-      logger.quiet("- configured repository: mavenLocal");
+      logger.debug("- configured repository: mavenLocal");
     }
   }
 
   public void addMavenCentralRepoIfEnabled(RepositoryManagerExtension extension, RepositoryHandler repoHandler) {
     if (extension.isMavenCentral()) {
       repoHandler.mavenCentral();
-      logger.quiet("- configured repository: mavenCentral");
+      logger.debug("- configured repository: mavenCentral");
     }
   }
 
   public void addGradlePluginPortalRepoIfEnabled(RepositoryManagerExtension extension, RepositoryHandler repoHandler) {
     if (extension.isGradlePluginPortal()) {
       repoHandler.gradlePluginPortal();
-      logger.quiet("- configured repository: gradlePluginPortal");
+      logger.debug("- configured repository: gradlePluginPortal");
     }
   }
 
