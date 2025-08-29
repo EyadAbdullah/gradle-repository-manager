@@ -10,7 +10,8 @@ import org.gradle.api.model.ObjectFactory;
 public class RepositoryManagerExtension {
 
   public static final String EXTENSION_NAME = "RepositoryManager";
-  public static final String REPOSITORY_DEFINITION_PREFIX = "repository_manager.repo";
+  public static final String SPLIT_ELEMENT = "_";
+  public static final String REPOSITORY_DEFINITION_PREFIX = "repository_manager" + SPLIT_ELEMENT + "repo";
   private final NamedDomainObjectContainer<ManageableRepository> manageableRepositories;
   private final Set<String> gradlePluginsToSetupForLoadingInResolutionStrategy = new HashSet<>();
   private boolean gradlePluginPortal = true;

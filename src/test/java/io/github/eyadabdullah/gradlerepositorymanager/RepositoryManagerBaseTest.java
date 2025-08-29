@@ -4,6 +4,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Map;
+
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.jupiter.api.BeforeAll;
@@ -63,16 +65,31 @@ abstract class RepositoryManagerBaseTest {
   }
 
   protected BuildResult loadAndAssertLoadingProject() {
+      return loadAndAssertLoadingProject(null);
+  }
+
+  protected BuildResult loadAndAssertLoadingProject(Map<String, String> environmentVariables) {
     // act
-    var result = GradleRunner.create()
-        .withDebug(true)
+    var runner = GradleRunner.create();
+
+    if (environmentVariables != null) {
+        runner = runner.withEnvironment(environmentVariables)
+                    .withDebug(false);
+    } else {
+        // debug only available when no environment variables are provided
+        runner = runner.withDebug(true);
+    }
+
+    runner = runner
         .forwardOutput()
         .withProjectDir(tempProjectDir)
-        .withPluginClasspath()
-        .build();
+        .withPluginClasspath();
+
+    BuildResult buildResult = runner.build();
+
     // assert
-    assertThat(result).isNotNull();
-    return result;
+    assertThat(buildResult).isNotNull();
+    return buildResult;
   }
 
   static void log(String message) {

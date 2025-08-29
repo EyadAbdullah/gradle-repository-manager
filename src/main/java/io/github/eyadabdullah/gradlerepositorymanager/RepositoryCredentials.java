@@ -2,16 +2,17 @@ package io.github.eyadabdullah.gradlerepositorymanager;
 
 import java.util.regex.Pattern;
 
+import static io.github.eyadabdullah.gradlerepositorymanager.extension.RepositoryManagerExtension.SPLIT_ELEMENT;
 import static io.github.eyadabdullah.gradlerepositorymanager.extension.RepositoryManagerExtension.REPOSITORY_DEFINITION_PREFIX;
 
 public class RepositoryCredentials {
 
-  private static final Pattern REPOSITORY_PROPERTY_REGEX = Pattern.compile("^" + REPOSITORY_DEFINITION_PREFIX + ".[a-z_\\d]+.(url|token_name|token_value|username|password)$");
-  private static final String PROP_URL = ".url";
-  private static final String PROP_KEY_NAME = ".token_name";
-  private static final String PROP_KEY_VALUE = ".token_value";
-  private static final String PROP_USERNAME = ".username";
-  private static final String PROP_PASSWORD = ".password";
+  private static final Pattern REPOSITORY_PROPERTY_REGEX = Pattern.compile("^" + REPOSITORY_DEFINITION_PREFIX + SPLIT_ELEMENT + "(?<identifier>[a-z_\\d]+)" + SPLIT_ELEMENT + "(url|token_name|token_value|username|password)$");
+  private static final String PROP_URL = SPLIT_ELEMENT + "url";
+  private static final String PROP_KEY_NAME = SPLIT_ELEMENT + "token_name";
+  private static final String PROP_KEY_VALUE = SPLIT_ELEMENT + "token_value";
+  private static final String PROP_USERNAME = SPLIT_ELEMENT + "username";
+  private static final String PROP_PASSWORD = SPLIT_ELEMENT + "password";
 
   private final String identifier;
   private String url;
@@ -25,11 +26,16 @@ public class RepositoryCredentials {
   }
 
   RepositoryCredentials(String property) {
-    this.identifier = property.split("\\.")[2];
+      var matcher = REPOSITORY_PROPERTY_REGEX.matcher(property);
+      if (matcher.matches()) {
+        this.identifier = matcher.group("identifier");
+      } else {
+        throw new IllegalArgumentException("Invalid repository property: " + property);
+      }
   }
 
   public void setProperty(String name, String value) {
-    var repoPrefix = REPOSITORY_DEFINITION_PREFIX + "." + identifier;
+    var repoPrefix = REPOSITORY_DEFINITION_PREFIX + SPLIT_ELEMENT + identifier;
     if (!name.startsWith(repoPrefix)) {
       return;
     }
