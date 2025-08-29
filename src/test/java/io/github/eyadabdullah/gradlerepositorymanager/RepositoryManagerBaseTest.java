@@ -1,9 +1,8 @@
 package io.github.eyadabdullah.gradlerepositorymanager;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.Map;
 
 import org.gradle.testkit.runner.BuildResult;
@@ -102,4 +101,7 @@ abstract class RepositoryManagerBaseTest {
     }
   }
 
+  static void setTestLogLevel(String debug) throws IOException {
+    Files.writeString(propertiesFile.toPath(), "\norg.gradle.logging.level="+debug, StandardOpenOption.APPEND, StandardOpenOption.CREATE);
+  }
 }

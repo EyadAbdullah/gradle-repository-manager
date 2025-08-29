@@ -17,6 +17,7 @@ class RepositoryManagerServiceTest extends RepositoryManagerBaseTest {
   @Test
   void testLoadingDefaultRepositories() throws IOException {
     // arrange
+    setTestLogLevel("debug");
     configurePluginInSettings();
     // act & assert
     var result = loadAndAssertLoadingProject();
@@ -52,7 +53,7 @@ class RepositoryManagerServiceTest extends RepositoryManagerBaseTest {
     addPublicDependencies();
     // act & assert
     var result = loadAndAssertLoadingProject();
-    assertTrue(result.getOutput().contains("configured repository: https://gitlab.example.com/api/v4/groups/680/-/packages/maven"));
+    assertTrue(result.getOutput().contains("found repository: https://gitlab.example.com/api/v4/groups/680/-/packages/maven"));
   }
 
   @Test
@@ -94,6 +95,8 @@ class RepositoryManagerServiceTest extends RepositoryManagerBaseTest {
           entry("repository_manager_repo_my_name123_url", "https://gitlab.example.com/api/v4/groups/680/-/packages/maven"),
           entry("unrelated_entry", "x")
       );
+
+      setTestLogLevel("debug");
 
       configurePluginInSettings("""
             RepositoryManager {
