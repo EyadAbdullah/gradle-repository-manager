@@ -61,9 +61,13 @@ RepositoryManager {
 }
 ```
 
-### Configure repository credentials in global gradle.properties
+### Configure repository credentials
 
 To configure your repository credentials, you first need to either create or locate your global Gradle properties file.
+Alternatively, you can use environment-variables.
+
+
+#### Using the global gradle.properties:
 
 This can be found in:
 - Linux,Mac,Unices under: `$HOME/.gradle/gradle.properties`
@@ -88,7 +92,32 @@ systemProp.repository_manager_repo_3_password=PASSWORD
 systemProp.repository_manager_repo_4_url=http://localhost:8081/artifactory/snapshot-local
 systemProp.repository_manager_repo_4_username=USERNAME
 systemProp.repository_manager_repo_4_password=PASSWORD
+
+
+# You can also use wildcard matching.
+# The following would replace repo 3&4:
+systemProp.repository_manager_repo_5_url=http://localhost:8081/*
+systemProp.repository_manager_repo_5_username=USERNAME
+systemProp.repository_manager_repo_5_password=PASSWORD
+
 ```
+
+#### Using environment variables:
+
+You can just specify the values as an environment variable:
+
+`repository_manager_repo_5_url=http://localhost:8081/*`
+
+This follows the same schema as the `gradle.properties`.
+
+
+
+## Logging
+If you set logging to `debug`, eg. via gradle.properties:
+
+`org.gradle.logging.level=debug`
+
+the repository manager will give you more detailed information about configured projects and repositories.
 
 ## How to test the plugin locally
 
@@ -143,3 +172,10 @@ RepositoryManager {
     validateDependencies()
 }
 ```
+## Contributors
+
+Merge Requests are welcome.
+
+When you add a feature, please add tests accordingly.
+
+This project uses semantic versioning.
