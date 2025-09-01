@@ -94,9 +94,9 @@ systemProp.repository_manager_repo_4_username=USERNAME
 systemProp.repository_manager_repo_4_password=PASSWORD
 
 
-# You can also use wildcard matching.
+# You can also use regex matching.
 # The following would replace repo 3&4:
-systemProp.repository_manager_repo_5_url=http://localhost:8081/*
+systemProp.repository_manager_repo_5_url=http://localhost:8081/.*
 systemProp.repository_manager_repo_5_username=USERNAME
 systemProp.repository_manager_repo_5_password=PASSWORD
 
