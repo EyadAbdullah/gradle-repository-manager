@@ -106,7 +106,7 @@ systemProp.repository_manager_repo_5_password=PASSWORD
 
 You can just specify the values as an environment variable:
 
-`repository_manager_repo_5_url=http://localhost:8081/*`
+`repository_manager_repo_5_url=http://localhost:8081/.*`
 
 This follows the same schema as the `gradle.properties`.
 
