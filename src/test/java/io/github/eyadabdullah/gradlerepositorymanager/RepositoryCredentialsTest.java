@@ -44,7 +44,7 @@ class RepositoryCredentialsTest {
 
         // assert
         error.isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("Invalid repository property: " + element);
+            .hasMessageStartingWith("Invalid repository property: '" + element + "'");
     }
 
     @Test
