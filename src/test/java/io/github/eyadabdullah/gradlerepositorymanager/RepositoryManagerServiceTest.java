@@ -1,6 +1,9 @@
 package io.github.eyadabdullah.gradlerepositorymanager;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +11,9 @@ import java.util.Map;
 import org.gradle.api.Action;
 import org.gradle.api.artifacts.dsl.RepositoryHandler;
 import org.gradle.api.artifacts.repositories.MavenArtifactRepository;
+import org.gradle.testkit.runner.BuildTask;
 import org.gradle.testkit.runner.GradleRunner;
+import org.gradle.testkit.runner.UnexpectedBuildFailure;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 
@@ -204,6 +209,78 @@ class RepositoryManagerServiceTest extends RepositoryManagerBaseTest {
         .withPluginClasspath();
     // assert
     assertThrows(Exception.class, result::build);
+  }
+
+  @Test
+  void configure_fails_repositoryRequireAuthenticationButNoneProvided() throws IOException {
+    // arrange
+    configurePluginInSettings( """
+        RepositoryManager {
+          gradlePluginPortal(true)
+          mavenCentral(true)
+
+          repository("repository", "https://gitlab.example.com/api/v4/groups/681/-/packages/maven") {
+            setRequireAuthentication(true)
+          }
+          validateDependencies()
+        }
+        """);
+    addPublicDependencies();
+    ByteArrayOutputStream errorData = new ByteArrayOutputStream();
+    Writer errorWriter = new OutputStreamWriter(errorData);
+    var result = GradleRunner.create()
+        .withDebug(true)
+        .forwardOutput()
+        .forwardStdError(errorWriter)
+        .withProjectDir(tempProjectDir)
+        .withPluginClasspath();
+    // act
+    assertThrows(UnexpectedBuildFailure.class, result::build);
+    // assert
+    assertThat(errorData.toString())
+        .contains("No credentials configured for 'https://gitlab.example.com/api/v4/groups/681/-/packages/maven' but the repository defines that it requires authentication, please visit https://github.com/EyadAbdullah/gradle-repository-manager/#configure-repository-credentials if you need help configuring them.");
+  }
+
+  @Test
+  void configure_successful_repositoryRequireAuthenticationAndProvided() throws IOException {
+    // arrange
+    configurePluginInSettings( """
+        RepositoryManager {
+          gradlePluginPortal(true)
+          mavenCentral(true)
+
+          repository("repository", "https://gitlab.example.com/api/v4/groups/680/-/packages/maven") {
+            setRequireAuthentication(true)
+          }
+          validateDependencies()
+        }
+        """);
+    addPublicDependencies();
+
+    var env = Map.ofEntries(
+        entry("repository_manager_repo_my_name123_username", "foo"),
+        entry("repository_manager_repo_my_name123_password", "foo"),
+        entry("repository_manager_repo_my_name123_url", "https://gitlab.example.com/api/v4/groups/680/-/packages/maven"),
+        entry("unrelated_entry", "x")
+    );
+
+    ByteArrayOutputStream errorData = new ByteArrayOutputStream();
+    Writer errorWriter = new OutputStreamWriter(errorData);
+    var result = GradleRunner.create()
+        .withEnvironment(env)
+        .forwardOutput()
+        .forwardStdError(errorWriter)
+        .withProjectDir(tempProjectDir)
+        .withPluginClasspath();
+
+    // act
+    var out = result.build();
+
+    // assert
+    BuildTask task = out.task(":help");
+    assertThat(task).isNotNull();
+    assertThat(task.getOutcome()).isNotNull();
+    assertThat(task.getOutcome().name()).isEqualTo("SUCCESS");
   }
 
   @Test
