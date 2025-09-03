@@ -92,7 +92,7 @@ class RepositoryManagerServiceTest extends RepositoryManagerBaseTest {
   void testAddingRepoWithNameAndCredentialsWithWildcardUrl() throws IOException {
     // arrange
     System.setProperty("repository_manager_repo_my_name123_username", "foo");
-    System.setProperty("repository_manager_repo_my_name123_url", "https://gitlab.example.com/*");
+    System.setProperty("repository_manager_repo_my_name123_url", "https://gitlab.example.com/.*");
     configurePluginInSettings("""
       RepositoryManager {
         repository("repository", "https://gitlab.example.com/api/v4/groups/680/-/packages/maven")
@@ -104,7 +104,7 @@ class RepositoryManagerServiceTest extends RepositoryManagerBaseTest {
     var result = loadAndAssertLoadingProject();
     assertTrue(result.getOutput().contains("found repository: repository\t- https://gitlab.example.com/api/v4/groups/680/-/packages/maven"));
     assertTrue(result.getOutput().contains("found repository: repository2\t- https://gitlab.example.com/api/v4/groups/42/-/packages/maven"));
-    assertTrue(result.getOutput().contains("- found credential: RepositoryCredentials{identifier='my_name123', url='https://gitlab.example.com/*', tokenName='null', username='foo'}"));
+    assertTrue(result.getOutput().contains("- found credential: RepositoryCredentials{identifier='my_name123', url='https://gitlab.example.com/.*', tokenName='null', username='foo'}"));
   }
 
   @Test
