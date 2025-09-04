@@ -160,8 +160,8 @@ RepositoryManager {
         snapshotsOnly = false
         // sets if the repo should only retrieve dependencies with snapshot versions. default false
         releasesOnly = false
-        // indicates if the repo requires authentication. When true, it will throw an exception if no credentials were found. default true
-        requireAuthentication = false
+        // indicates if the repo requires authentication. When true, it will throw an exception if no credentials were found. default false
+        requireAuthentication = true
     }
     // makes local maven repository available. default inactive
     mavenLocal()
