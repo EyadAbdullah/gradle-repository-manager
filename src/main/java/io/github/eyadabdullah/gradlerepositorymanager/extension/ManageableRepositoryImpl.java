@@ -7,6 +7,7 @@ public class ManageableRepositoryImpl implements ManageableRepository {
     private boolean secureProtocol = true;
     private boolean snapshotsOnly = false;
     private boolean releasesOnly = false;
+    private boolean requireAuthentication = false;
 
     public ManageableRepositoryImpl(String name) {
         this.name = name;
@@ -61,5 +62,13 @@ public class ManageableRepositoryImpl implements ManageableRepository {
         this.releasesOnly = releasesOnly;
     }
 
+    @Override
+    public boolean requireAuthentication() {
+        return requireAuthentication;
+    }
 
+    @Override
+    public void setRequireAuthentication(boolean requireAuthentication) {
+        this.requireAuthentication = requireAuthentication;
+    }
 }

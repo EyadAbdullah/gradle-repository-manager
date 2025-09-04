@@ -20,4 +20,7 @@ public interface ManageableRepository extends Named {
 
   void setReleasesOnly(boolean releasesOnly);
 
+  boolean requireAuthentication();
+
+  void setRequireAuthentication(boolean requireAuthentication);
 }
