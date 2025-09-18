@@ -7,7 +7,10 @@ import static io.github.eyadabdullah.gradlerepositorymanager.extension.Repositor
 
 public class RepositoryCredentials {
 
-  private static final Pattern REPOSITORY_PROPERTY_REGEX = Pattern.compile("^" + REPOSITORY_DEFINITION_PREFIX + SPLIT_ELEMENT + "(?<identifier>[a-z_\\d]+)" + SPLIT_ELEMENT + "(url|token_name|token_value|username|password)$");
+  private static final String REGEX_STRING =
+      "^" + REPOSITORY_DEFINITION_PREFIX + SPLIT_ELEMENT + "(?<identifier>[a-z_\\d]+)" + SPLIT_ELEMENT
+          + "(url|token_name|token_value|username|password)$";
+  private static final Pattern REPOSITORY_PROPERTY_REGEX = Pattern.compile(REGEX_STRING);
   private static final String PROP_URL = SPLIT_ELEMENT + "url";
   private static final String PROP_KEY_NAME = SPLIT_ELEMENT + "token_name";
   private static final String PROP_KEY_VALUE = SPLIT_ELEMENT + "token_value";
@@ -30,7 +33,7 @@ public class RepositoryCredentials {
       if (matcher.matches()) {
         this.identifier = matcher.group("identifier");
       } else {
-        throw new IllegalArgumentException("Invalid repository property: " + property);
+        throw new IllegalArgumentException("Invalid repository property: '%s' (Expecting to match: '%s')".formatted(property, REPOSITORY_PROPERTY_REGEX));
       }
   }
 

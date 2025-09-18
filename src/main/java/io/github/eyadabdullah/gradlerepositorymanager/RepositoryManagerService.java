@@ -1,5 +1,6 @@
 package io.github.eyadabdullah.gradlerepositorymanager;
 
+import io.github.eyadabdullah.gradlerepositorymanager.exceptions.MissingRepositoryCredentials;
 import io.github.eyadabdullah.gradlerepositorymanager.extension.ManageableRepository;
 import io.github.eyadabdullah.gradlerepositorymanager.extension.RepositoryManagerExtension;
 import java.net.URI;
@@ -23,6 +24,7 @@ import static io.github.eyadabdullah.gradlerepositorymanager.extension.Repositor
 public class RepositoryManagerService {
 
   private static final Logger logger = Logging.getLogger(RepositoryManagerService.class);
+  private static final String REPOSITORY_CONFIGURATION_DOCUMENTATION_URL = "https://github.com/EyadAbdullah/gradle-repository-manager/#configure-repository-credentials";
   private List<RepositoryCredentials> repositoryCredentials = new ArrayList<>();
 
   // Font Name: ANSI Shadow
@@ -35,9 +37,9 @@ public class RepositoryManagerService {
       ██████╔╝█████╗  ██████╔╝██║   ██║███████╗██║   ██║   ██║   ██║██████╔╝ ╚████╔╝     ██╔████╔██║███████║██╔██╗ ██║███████║██║  ███╗█████╗  ██████╔╝
       ██╔══██╗██╔══╝  ██╔═══╝ ██║   ██║╚════██║██║   ██║   ██║   ██║██╔══██╗  ╚██╔╝      ██║╚██╔╝██║██╔══██║██║╚██╗██║██╔══██║██║   ██║██╔══╝  ██╔══██╗
       ██║  ██║███████╗██║     ╚██████╔╝███████║██║   ██║   ╚██████╔╝██║  ██║   ██║       ██║ ╚═╝ ██║██║  ██║██║ ╚████║██║  ██║╚██████╔╝███████╗██║  ██║
-      ╚═╝  ╚═╝╚══════╝╚═╝      ╚═════╝ ╚══════╝╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝   ╚═╝       ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝      
+      ╚═╝  ╚═╝╚══════╝╚═╝      ╚═════╝ ╚══════╝╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝   ╚═╝       ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝
       
-      By Eyad Abdullah                                         
+      By Eyad Abdullah, Felix Nüsse, Kenan Kajkus & Moritz Borgmann
       ==================================================================================================================================================
       """;
 
@@ -46,33 +48,38 @@ public class RepositoryManagerService {
    */
   @SuppressWarnings("UnstableApiUsage")
   public void findRepositoryCredentialsFromGradleProperties(ProviderFactory provider) {
-    var repositoriesToConfigure = new HashMap<String, RepositoryCredentials>();
+    var repositoryCredentialsToConfigure = new HashMap<String, RepositoryCredentials>();
     var repositorySystemProperties = provider.systemPropertiesPrefixedBy(REPOSITORY_DEFINITION_PREFIX).get();
-      collectCredentialsInto(repositoriesToConfigure, repositorySystemProperties);
+    collectCredentialsInto(repositoryCredentialsToConfigure, repositorySystemProperties);
 
-      var repositoryEnvProperties = provider.environmentVariablesPrefixedBy(REPOSITORY_DEFINITION_PREFIX).get();
-      collectCredentialsInto(repositoriesToConfigure, repositoryEnvProperties);
+    var repositoryEnvProperties = provider.environmentVariablesPrefixedBy(REPOSITORY_DEFINITION_PREFIX).get();
+    collectCredentialsInto(repositoryCredentialsToConfigure, repositoryEnvProperties);
 
-      repositoriesToConfigure.values().forEach(repo ->
-        logger.quiet("- found credential: {}", repo.toString()));
-      if(repositoriesToConfigure.isEmpty()) {
-        logger.warn("- no credentials configured! Please visit https://github.com/EyadAbdullah/gradle-repository-manager/#configure-repository-credentials if you need help configuring them.");
-      }
-    repositoryCredentials = repositoriesToConfigure.values().stream().toList();
+    repositoryCredentialsToConfigure.values().forEach(repo ->
+      logger.quiet("- found credential: {}", repo.toString())
+    );
+    if(repositoryCredentialsToConfigure.isEmpty()) {
+      logger.warn("- no credentials configured! Please visit " + REPOSITORY_CONFIGURATION_DOCUMENTATION_URL + " if you need help configuring them.");
+    }
+    setRepositoryCredentials(repositoryCredentialsToConfigure.values().stream().toList());
   }
 
-    private static void collectCredentialsInto(HashMap<String, RepositoryCredentials> repositoriesToConfigure, Map<String, String> repositoryProperties) {
-        repositoryProperties.forEach((propertyName, propertyValue) -> {
-          if (RepositoryCredentials.isValidRepository(propertyName)) {
-            var repository = new RepositoryCredentials(propertyName);
-            repository = repositoriesToConfigure.getOrDefault(repository.getIdentifier(), repository);
-            repository.setProperty(propertyName, propertyValue);
-            repositoriesToConfigure.put(repository.getIdentifier(), repository);
-          }
-        });
-    }
+  public void setRepositoryCredentials(List<RepositoryCredentials> repositoryCredentials) {
+    this.repositoryCredentials = repositoryCredentials;
+  }
 
-    public void addRepositories(RepositoryHandler repoHandler, List<ManageableRepository> repositories) {
+  private static void collectCredentialsInto(HashMap<String, RepositoryCredentials> repositoriesToConfigure, Map<String, String> repositoryProperties) {
+    repositoryProperties.forEach((propertyName, propertyValue) -> {
+      if (RepositoryCredentials.isValidRepository(propertyName)) {
+        var repository = new RepositoryCredentials(propertyName);
+        repository = repositoriesToConfigure.getOrDefault(repository.getIdentifier(), repository);
+        repository.setProperty(propertyName, propertyValue);
+        repositoriesToConfigure.put(repository.getIdentifier(), repository);
+      }
+    });
+  }
+
+  public void addRepositories(RepositoryHandler repoHandler, List<ManageableRepository> repositories) {
     repositories.forEach(repo -> addRepository(repoHandler, repo));
   }
 
@@ -116,10 +123,14 @@ public class RepositoryManagerService {
           // set an authentication type
           mavenArtifactRepository.authentication(authentications ->
               authentications.add(new DefaultHttpHeaderAuthentication("header")));
+        } else if (repository.requireAuthentication()) {
+          throw new MissingRepositoryCredentials("Credentials found for '%s' but neither username/password nor tokenName/tokenValue are defined, please visit %s if you need help configuring them.".formatted(repository.getUrl(), REPOSITORY_CONFIGURATION_DOCUMENTATION_URL));
         }
+      } else if (repository.requireAuthentication()) {
+        throw new MissingRepositoryCredentials("No credentials configured for '%s' but the repository defines that it requires authentication, please visit %s if you need help configuring them.".formatted(repository.getUrl(), REPOSITORY_CONFIGURATION_DOCUMENTATION_URL));
       }
     });
-    logger.debug("- configured repository: " + repository.getName());
+    logger.debug("- configured repository: {}", repository.getName());
   }
 
   public void addMavenLocalRepoIfEnabled(RepositoryManagerExtension extension, RepositoryHandler repoHandler) {
