@@ -1,11 +1,16 @@
 package io.github.eyadabdullah.gradlerepositorymanager;
 
+import org.gradle.api.logging.Logger;
+import org.gradle.api.logging.Logging;
+
 import java.util.regex.Pattern;
 
 import static io.github.eyadabdullah.gradlerepositorymanager.extension.RepositoryManagerExtension.SPLIT_ELEMENT;
 import static io.github.eyadabdullah.gradlerepositorymanager.extension.RepositoryManagerExtension.REPOSITORY_DEFINITION_PREFIX;
 
 public class RepositoryCredentials {
+
+  private static final Logger logger = Logging.getLogger(RepositoryCredentials.class);
 
   private static final String REGEX_STRING =
       "^" + REPOSITORY_DEFINITION_PREFIX + SPLIT_ELEMENT + "(?<identifier>[a-z_\\d]+)" + SPLIT_ELEMENT
@@ -43,6 +48,9 @@ public class RepositoryCredentials {
       return;
     }
     if (name.endsWith(PROP_URL)) {
+      if(value.endsWith("*") && !value.endsWith(".*")) {
+        logger.warn("! Warning: You specified a '*' in a credential. You likely want to use '.*' instead. This plugin uses regex, not glob-style matching.");
+      }
       this.url = value;
     } else if (name.endsWith(PROP_KEY_NAME)) {
       this.tokenName = value;
