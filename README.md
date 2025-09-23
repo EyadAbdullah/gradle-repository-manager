@@ -13,7 +13,7 @@ Add the following plugin configuration at the top of your `settings.gradle.kts` 
 
 ```groovy
 plugins {
-  id("io.github.eyadabdullah.gradle-repository-manager") version("3.0.2")
+  id("io.github.eyadabdullah.gradle-repository-manager") version("3.0.3")
 }
 ```
 
