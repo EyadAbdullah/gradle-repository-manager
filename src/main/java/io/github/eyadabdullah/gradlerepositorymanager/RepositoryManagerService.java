@@ -3,7 +3,6 @@ package io.github.eyadabdullah.gradlerepositorymanager;
 import io.github.eyadabdullah.gradlerepositorymanager.exceptions.MissingRepositoryCredentials;
 import io.github.eyadabdullah.gradlerepositorymanager.extension.ManageableRepository;
 import io.github.eyadabdullah.gradlerepositorymanager.extension.RepositoryManagerExtension;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +39,6 @@ public class RepositoryManagerService {
   /**
    * We are surpassing UnstableApiUsage as the systemPropertiesPrefixedBy feature is still a work in progress and my change in the future.
    */
-  @SuppressWarnings("UnstableApiUsage")
   public void findRepositoryCredentialsFromGradleProperties(ProviderFactory provider) {
     var repositoryCredentialsToConfigure = new HashMap<String, RepositoryCredentials>();
     var repositorySystemProperties = provider.systemPropertiesPrefixedBy(REPOSITORY_DEFINITION_PREFIX).get();
@@ -81,7 +79,7 @@ public class RepositoryManagerService {
     repoHandler.maven(mavenArtifactRepository -> {
       // set repo information
       mavenArtifactRepository.setName(repository.getName());
-      mavenArtifactRepository.setUrl(URI.create(repository.getUrl()));
+      mavenArtifactRepository.setUrl(repository.getUrl());
       mavenArtifactRepository.setAllowInsecureProtocol(!repository.isSecureProtocol());
 
       if (repository.isSnapshotsOnly()) {
