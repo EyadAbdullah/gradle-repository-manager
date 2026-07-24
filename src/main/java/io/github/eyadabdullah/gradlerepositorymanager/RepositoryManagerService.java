@@ -3,6 +3,7 @@ package io.github.eyadabdullah.gradlerepositorymanager;
 import io.github.eyadabdullah.gradlerepositorymanager.exceptions.MissingRepositoryCredentials;
 import io.github.eyadabdullah.gradlerepositorymanager.extension.ManageableRepository;
 import io.github.eyadabdullah.gradlerepositorymanager.extension.RepositoryManagerExtension;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +25,8 @@ import static io.github.eyadabdullah.gradlerepositorymanager.extension.Repositor
 public class RepositoryManagerService {
 
   private static final Logger logger = Logging.getLogger(RepositoryManagerService.class);
-  private static final String REPOSITORY_CONFIGURATION_DOCUMENTATION_URL = "https://github.com/EyadAbdullah/gradle-repository-manager/#configure-repository-credentials";
+  public static final String REPOSITORY_DOCUMENTATION_URL = "https://github.com/EyadAbdullah/gradle-repository-manager/";
+  private static final String REPOSITORY_CONFIGURATION_DOCUMENTATION_URL = REPOSITORY_DOCUMENTATION_URL+"#configure-repository-credentials";
   private List<RepositoryCredentials> repositoryCredentials = new ArrayList<>();
 
   // Font Name: ANSI Shadow
@@ -71,6 +73,10 @@ public class RepositoryManagerService {
         repositoriesToConfigure.put(repository.getIdentifier(), repository);
       }
     });
+  }
+
+  public List<RepositoryCredentials> getRepositoryCredentials() {
+    return repositoryCredentials;
   }
 
   public void addRepositories(RepositoryHandler repoHandler, List<ManageableRepository> repositories) {
