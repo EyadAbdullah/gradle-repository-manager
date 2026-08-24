@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "io.github.eyadabdullah"
-version = "3.0.5-SNAPSHOT"
+version = "3.1.0"
 
 dependencies {
     implementation(gradleApi())

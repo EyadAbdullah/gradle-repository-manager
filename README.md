@@ -13,7 +13,7 @@ Add the following plugin configuration at the top of your `settings.gradle.kts` 
 
 ```groovy
 plugins {
-  id("io.github.eyadabdullah.gradle-repository-manager") version("3.0.4")
+  id("io.github.eyadabdullah.gradle-repository-manager") version("3.1.0")
 }
 ```
 
@@ -78,20 +78,26 @@ Here is a recommended sample configuration:
 systemProp.repository_manager_repo_0_url=https://source.example.com/api/v4/groups/1/-/packages/maven
 systemProp.repository_manager_repo_0_token_name=Private-Token
 systemProp.repository_manager_repo_0_token_value=YOUR PERSONAL GITLAB TOKEN HERE
+systemProp.repository_manager_repo_0_validator=gitlab
+# available options: jfrog, gitlab, none
+
 
 systemProp.repository_manager_repo_1_url=https://source.example.com/api/v4/groups/2/-/packages/maven
 systemProp.repository_manager_repo_1_token_name=Private-Token
 systemProp.repository_manager_repo_1_token_value=YOUR PERSONAL GITLAB TOKEN HERE
+systemProp.repository_manager_repo_1_validator=gitlab
 
 # gradle-plugins-local on Artifactory
 systemProp.repository_manager_repo_3_url=http://localhost:8081/artifactory/release-local
 systemProp.repository_manager_repo_3_username=USERNAME
 systemProp.repository_manager_repo_3_password=PASSWORD
+systemProp.repository_manager_repo_3_validator=none
 
 # libs-release-local on Artifactory
 systemProp.repository_manager_repo_4_url=http://localhost:8081/artifactory/snapshot-local
 systemProp.repository_manager_repo_4_username=USERNAME
 systemProp.repository_manager_repo_4_password=PASSWORD
+systemProp.repository_manager_repo_4_validator=none
 
 
 # You can also use regex matching.
@@ -99,8 +105,19 @@ systemProp.repository_manager_repo_4_password=PASSWORD
 systemProp.repository_manager_repo_5_url=http://localhost:8081/.*
 systemProp.repository_manager_repo_5_username=USERNAME
 systemProp.repository_manager_repo_5_password=PASSWORD
+systemProp.repository_manager_repo_5_validator=none
 
 ```
+
+#### Validators:
+
+To check a token or username/password combination for validity, you need to specify a validator.
+The following validators are available:
+- `none` - no validation is performed
+- `gitlab` - validates the token against the GitLab User-API
+- `jfrog` - validates the token against the JFrog Artifactory System-Version API
+
+GitLab requires a token and token name, jfrog requires a username and password.
 
 #### Using environment variables:
 

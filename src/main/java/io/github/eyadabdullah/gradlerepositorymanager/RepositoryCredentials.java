@@ -14,13 +14,14 @@ public class RepositoryCredentials {
 
   private static final String REGEX_STRING =
       "^" + REPOSITORY_DEFINITION_PREFIX + SPLIT_ELEMENT + "(?<identifier>[a-z_\\d]+)" + SPLIT_ELEMENT
-          + "(url|token_name|token_value|username|password)$";
+          + "(url|token_name|token_value|username|password|validator)$";
   private static final Pattern REPOSITORY_PROPERTY_REGEX = Pattern.compile(REGEX_STRING);
   private static final String PROP_URL = SPLIT_ELEMENT + "url";
   private static final String PROP_KEY_NAME = SPLIT_ELEMENT + "token_name";
   private static final String PROP_KEY_VALUE = SPLIT_ELEMENT + "token_value";
   private static final String PROP_USERNAME = SPLIT_ELEMENT + "username";
   private static final String PROP_PASSWORD = SPLIT_ELEMENT + "password";
+  private static final String PROP_VALIDATOR = SPLIT_ELEMENT + "validator";
 
   private final String identifier;
   private String url;
@@ -28,6 +29,7 @@ public class RepositoryCredentials {
   private String tokenValue;
   private String username;
   private String password;
+  private String validator;
 
   public static boolean isValidRepository(String property) {
     return REPOSITORY_PROPERTY_REGEX.matcher(property).matches();
@@ -60,6 +62,8 @@ public class RepositoryCredentials {
       this.username = value;
     } else if (name.endsWith(PROP_PASSWORD)) {
       this.password = value;
+    } else if (name.endsWith(PROP_VALIDATOR)) {
+      this.validator = value;
     }
   }
 
@@ -111,6 +115,18 @@ public class RepositoryCredentials {
     this.password = password;
   }
 
+  public String getValidator() {
+    if(validator == null) {
+      validator = "";
+    }
+
+    return validator;
+  }
+
+  public void setValidator(String validator) {
+    this.validator = validator;
+  }
+
   @Override
   public String toString() {
     return "RepositoryCredentials{" +
@@ -118,6 +134,7 @@ public class RepositoryCredentials {
         ", url='" + url + '\'' +
         ", tokenName='" + tokenName + '\'' +
         ", username='" + username + '\'' +
+        ", validator='" + validator + '\'' +
         '}';
   }
 }

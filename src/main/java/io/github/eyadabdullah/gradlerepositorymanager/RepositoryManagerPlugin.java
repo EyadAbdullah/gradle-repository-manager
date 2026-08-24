@@ -1,6 +1,7 @@
 package io.github.eyadabdullah.gradlerepositorymanager;
 
 import io.github.eyadabdullah.gradlerepositorymanager.extension.RepositoryManagerExtension;
+import io.github.eyadabdullah.gradlerepositorymanager.tokenvalidator.ValidationService;
 import org.gradle.api.Plugin;
 import org.gradle.api.initialization.Settings;
 import org.gradle.api.initialization.dsl.ScriptHandler;
@@ -14,6 +15,7 @@ public class RepositoryManagerPlugin implements Plugin<Settings> {
 
   private static final Logger logger = Logging.getLogger(RepositoryManagerPlugin.class);
   private final RepositoryManagerService repositoryManagerService = new RepositoryManagerService();
+  private final ValidationService validationService = new ValidationService();
 
   @Override
   public void apply(Settings settings) {
@@ -35,6 +37,8 @@ public class RepositoryManagerPlugin implements Plugin<Settings> {
 
       logger.quiet("\n> RepositoryManager - collected credentials: ");
       repositoryManagerService.findRepositoryCredentialsFromGradleProperties(settingsProvider);
+      validationService.validateAll(repositoryManagerService.getRepositoryCredentials());
+
       // add plugin specific repositories
       logger.debug("\n> RepositoryManager - PluginManagement repositories: ");
       repositoryManagerService.addRepositories(settingsRepoHandler, repositoriesList);
