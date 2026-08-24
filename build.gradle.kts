@@ -24,7 +24,7 @@ gradlePlugin {
     website.set("https://github.com/EyadAbdullah/gradle-repository-manager")
     vcsUrl.set("https://github.com/EyadAbdullah/gradle-repository-manager")
     plugins {
-        create("gradle-repository-manager") {
+        register("gradle-repository-manager") {
             id = "io.github.eyadabdullah.gradle-repository-manager"
             implementationClass = "io.github.eyadabdullah.gradlerepositorymanager.RepositoryManagerPlugin"
 
