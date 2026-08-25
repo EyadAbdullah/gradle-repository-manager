@@ -103,7 +103,7 @@ class RepositoryManagerServiceTest extends RepositoryManagerBaseTest {
     // act & assert
     var result = loadAndAssertLoadingProject();
     assertTrue(result.getOutput().contains("found repository: repository\t- https://gitlab.example.com/api/v4/groups/680/-/packages/maven"));
-    assertTrue(result.getOutput().contains("- found credential: RepositoryCredentials{identifier='my_name123', url='https://gitlab.example.com/api/v4/groups/680/-/packages/maven', tokenName='null', username='foo'}"));
+    assertTrue(result.getOutput().contains("- found credential: RepositoryCredentials{identifier='my_name123', url='https://gitlab.example.com/api/v4/groups/680/-/packages/maven', tokenName='null', username='foo', validator='null'}"));
   }
 
 
@@ -123,7 +123,7 @@ class RepositoryManagerServiceTest extends RepositoryManagerBaseTest {
     var result = loadAndAssertLoadingProject();
     assertTrue(result.getOutput().contains("found repository: repository\t- https://gitlab.example.com/api/v4/groups/680/-/packages/maven"));
     assertTrue(result.getOutput().contains("found repository: repository2\t- https://gitlab.example.com/api/v4/groups/42/-/packages/maven"));
-    assertTrue(result.getOutput().contains("- found credential: RepositoryCredentials{identifier='my_name123', url='https://gitlab.example.com/.*', tokenName='null', username='foo'}"));
+    assertTrue(result.getOutput().contains("- found credential: RepositoryCredentials{identifier='my_name123', url='https://gitlab.example.com/.*', tokenName='null', username='foo', validator='null'}"));
   }
 
   @Test
@@ -132,6 +132,7 @@ class RepositoryManagerServiceTest extends RepositoryManagerBaseTest {
       var env = Map.ofEntries(
           entry("repository_manager_repo_my_name123_username", "foo"),
           entry("repository_manager_repo_my_name123_url", "https://gitlab.example.com/api/v4/groups/680/-/packages/maven"),
+          entry("repository_manager_repo_my_name123_validator", "none"),
           entry("unrelated_entry", "x")
       );
 
@@ -147,7 +148,7 @@ class RepositoryManagerServiceTest extends RepositoryManagerBaseTest {
       var result = loadAndAssertLoadingProject(env);
       assertTrue(result.getOutput().contains("found repository: repository\t- https://gitlab.example.com/api/v4/groups/680/-/packages/maven"));
       assertTrue(result.getOutput()
-          .contains("- found credential: RepositoryCredentials{identifier='my_name123', url='https://gitlab.example.com/api/v4/groups/680/-/packages/maven', tokenName='null', username='foo'}"));
+          .contains("- found credential: RepositoryCredentials{identifier='my_name123', url='https://gitlab.example.com/api/v4/groups/680/-/packages/maven', tokenName='null', username='foo', validator='none'}"));
   }
 
   @Test
